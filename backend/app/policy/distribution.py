@@ -111,20 +111,28 @@ def select_seeds(P: Params, strategy: str, n_seed: int, rel: np.ndarray, communi
 
 
 def share_exposures(sharers: np.ndarray, adj: sp.csr_matrix, unseen: np.ndarray, u_accept: np.ndarray,
-                    u_tiebreak: np.ndarray, accept_prob: float, fanout_cap: int) -> tuple[np.ndarray, np.ndarray]:
+                    u_tiebreak: np.ndarray, accept_prob: float, fanout_cap: int,
+                    counts: dict | None = None) -> tuple[np.ndarray, np.ndarray]:
     """Followers newly exposed by this round's sharers.
 
     A follower is eligible if unseen and its acceptance uniform < accept_prob. Each sharer
     exposes at most ``fanout_cap`` eligible followers, in tie-break order. A follower reached
     by several sharers is credited to the lowest sharer id. Returns (targets, sources).
+    If ``counts`` is given it receives follower_edges, unseen_edges and accepted_edges
+    (for the exposures-per-sharer breakdown).
     """
+    if counts is not None:
+        counts.update(follower_edges=0, unseen_edges=0, accepted_edges=0)
     if sharers.size == 0:
         return np.empty(0, dtype=np.int64), np.empty(0, dtype=np.int64)
     sharers = np.sort(sharers)
     sub = adj[sharers]
     src = np.repeat(sharers, np.diff(sub.indptr))
     fol = sub.indices.astype(np.int64)
-    ok = unseen[fol] & (u_accept[fol] < accept_prob)
+    is_unseen = unseen[fol]
+    ok = is_unseen & (u_accept[fol] < accept_prob)
+    if counts is not None:
+        counts.update(follower_edges=int(fol.size), unseen_edges=int(is_unseen.sum()), accepted_edges=int(ok.sum()))
     src, fol = src[ok], fol[ok]
     if fol.size == 0:
         return fol, src

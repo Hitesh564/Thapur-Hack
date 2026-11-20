@@ -17,16 +17,29 @@ from app.personas import sample_population
 from app.preprocessing.frames import preprocess
 from app.prior import prior as compute_prior
 from app.relevance import compute_relevance, load_relevance, save_relevance
-from app.storage import read_json, video_dir, write_json
+from app.storage import cache_root, read_json, video_dir, write_json
 from app.video_analysis import analyze
 from schemas import PriorResult, RelevanceResult, VideoProfile
 
 
 @lru_cache(maxsize=1)
 def get_world() -> World:
+    """Population + graph, versioned and persisted (identities never change between videos)."""
     cfg = get_config()
     pop = sample_population(cfg)
-    return World(pop, build_graph(pop, cfg))
+    graph = build_graph(pop, cfg)
+    wdir = cache_root() / "world"
+    pop_path = wdir / f"population_{pop.version}.parquet"
+    if not pop_path.exists():
+        pop.save(pop_path)
+    g_path = wdir / f"graph_{graph.version}.npz"
+    if not g_path.exists():
+        graph.save(g_path)
+        write_json(wdir / f"graph_{graph.version}.meta.json", {
+            "version": graph.version, "seed": graph.seed, "population_version": pop.version,
+            "edges": int(graph.adj.nnz), "intra_edge_ratio": graph.intra_edge_ratio(),
+            "hubs": int((graph.role == 1).sum()), "bridges": int((graph.role == 2).sum())})
+    return World(pop, graph)
 
 
 def base_profile(video_id: str, with_transcript: bool = True) -> VideoProfile:
@@ -58,7 +71,17 @@ def analyze_video(video_id: str, prior_method: Optional[str] = None, relevance_m
 
 def get_analysis(video_id: str) -> Optional[tuple[VideoProfile, PriorResult, np.ndarray, RelevanceResult]]:
     bundle = read_json(video_dir(video_id) / "analysis_bundle.json")
-    rel = load_relevance(video_id)
-    if not bundle or rel is None:
+    if not bundle:
         return None
-    return (VideoProfile.model_validate(bundle["profile"]), PriorResult.model_validate(bundle["prior"]), rel[0], rel[1])
+    profile = VideoProfile.model_validate(bundle["profile"])
+    pop = get_world().population
+    rel = load_relevance(video_id)
+    if rel is None or rel[1].population_version != pop.version:
+        # population changed since analysis: recompute relevance (CLIP image vectors are cached)
+        method = "keyword" if bundle["relevance"].get("method") == "keyword" else None
+        r, res = compute_relevance(profile, pop, method=method)
+        save_relevance(video_id, r, res)
+        bundle["relevance"] = res.model_dump(mode="json")
+        write_json(video_dir(video_id) / "analysis_bundle.json", bundle)
+        rel = (r, res)
+    return (profile, PriorResult.model_validate(bundle["prior"]), rel[0], rel[1])

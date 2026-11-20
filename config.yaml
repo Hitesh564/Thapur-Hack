@@ -15,6 +15,15 @@ population:
   default_seed: 7
   influence_class_mult: {low: 0.5, medium: 1.0, high: 3.0}
 
+personas:
+  min_per_community: 5
+  max_per_community: 8
+  min_interests: 3
+  max_interests: 6
+  tendency_min: 0.2           # trait-range bounds accepted from the LLM generator
+  tendency_max: 2.5
+  generation_attempts: 3
+
 graph:
   mean_out_degree: 12
   intra_community_ratio: 0.8
@@ -143,14 +152,20 @@ pathways:
   hub_driven_share: 0.4
   bridge_driven_share: 0.3
   cross_community_min_communities: 3
+  cross_community_min_fraction: 0.3   # above the graph's baseline cross-edge share (1 - intra_community_ratio)
   broad_shallow_depth: 3
   deep_narrow_depth: 6
+  priority: [early_cascade_failure, niche_community_led, hub_driven, bridge_driven, cross_community,
+             broad_but_shallow, deep_but_narrow]   # PRD 11.4 order
 
 tipping:
   grid_points: 15
   milestone_pct: 0.25
   p_min: 0.05
   p_max: 0.95
+  n_seeds: 20
+  sample_assumptions: true    # each seed also draws its own assumption sample (parameter uncertainty)
+  steep_fraction: 0.5         # "on the steep part" if local slope >= this share of the maximum slope
 
 video:
   min_seconds: 3
@@ -163,4 +178,5 @@ video:
   opening_frames: 4
   opening_seconds: 3
   attention_windows: 8
+  attention_samples: 2         # rubric calls per window (8 x 2 = 16 calls, run in parallel)
   cache_dir: cache

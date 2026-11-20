@@ -6,11 +6,14 @@ from collections import OrderedDict
 from typing import Optional
 
 import numpy as np
+import pandas as pd
 
 from app.config import Params, get_config
-from app.diagnostics import diagnose_r, find_bottlenecks
+from app.diagnostics import diagnose_r, find_bottlenecks, share_breakdown, stop_explanation
 from app.diagnostics.attribution import attribution, replay_aggregates
+from app.diagnostics.pathways import classify
 from app.engine import RunResult, SimInputs, simulate
+from app.eventlog import EventLog
 from app.experiments import Arm, run_matched
 from app.pipeline import get_analysis, get_world
 from app.policy import resolve_policy
@@ -55,6 +58,7 @@ def run_simulation(video_id: str, seed: int = 0, seeding_strategy: Optional[str]
             _RUNS.popitem(last=False)
     payload = run_payload(run, rel, P, other_rate)
     write_json(cache_root() / "runs" / f"{run.run_id}.json", payload)
+    run.log.to_parquet(cache_root() / "runs" / f"{run.run_id}.parquet")
     return payload
 
 
@@ -63,6 +67,8 @@ def run_payload(run: RunResult, rel: np.ndarray, P: Params, other_seed_milestone
     pop = world.population
     d = diagnose_r(run.log, P, pop.n_communities)
     names = pop.community_names
+    S0 = resolve_policy(P, run.config.policy_variant).S0
+    S_last = run.rounds[-1].expansion_score if run.rounds else 0.0
     bottlenecks = find_bottlenecks(run.log, P, rel, run.rounds, run.stop_reason, np.bincount(pop.community),
                                    resolve_policy(P, run.config.policy_variant).S0,
                                    other_seed_milestone_rate=other_seed_milestone_rate,
@@ -78,6 +84,8 @@ def run_payload(run: RunResult, rel: np.ndarray, P: Params, other_seed_milestone
             "R": d["R"], "R_tag": "SIMULATED",
             "pooled": d["pooled"],
             "binding": d["binding"].model_dump(mode="json"),
+            "share_breakdown": share_breakdown(d["rounds"], run.rounds),
+            "stop": stop_explanation(run.stop_reason, d["rounds"], S_last, S0),
             "factors": [f.model_dump(mode="json") for f in d["factors"]],
             "rounds": d["rounds"],
             "by_community": {names[c]: {"pooled": v["pooled"], "binding": v["binding"].model_dump(mode="json")}
@@ -85,6 +93,8 @@ def run_payload(run: RunResult, rel: np.ndarray, P: Params, other_seed_milestone
             "bottlenecks": [b.model_dump(mode="json") for b in bottlenecks],
             "note": "Diagnosis of this simulated run; references are assumed 'healthy' settings from config.",
         },
+        "pathways": classify(run.log, P, run.stop_reason, run.summary.rounds, run.summary.depth,
+                             run.summary.reached_milestone),
         "attribution": attribution(run.log, names),
         "replay": replay_aggregates(run.log, pop.n_communities),
     }
@@ -97,9 +107,13 @@ def get_run(run_id: str) -> Optional[dict]:
 def get_run_events(run_id: str, offset: int = 0, limit: int = 1000) -> Optional[dict]:
     with _lock:
         entry = _RUNS.get(run_id)
-    if entry is None:
-        return None
-    df = entry[0].log.to_frame()
+    if entry is not None:
+        df = entry[0].log.to_frame()
+    else:
+        path = cache_root() / "runs" / f"{run_id}.parquet"
+        if not path.exists():
+            return None
+        df = EventLog(run_id, {k: v.to_numpy() for k, v in pd.read_parquet(path).drop(columns="run_id").items()}).to_frame()
     page = df.iloc[offset:offset + limit]
     return {"run_id": run_id, "total": int(len(df)), "offset": offset,
             "events": page.astype(object).where(page.notna(), None).to_dict(orient="records")}
@@ -147,3 +161,21 @@ def run_experiment(variable: str, baseline_video_id: str, variant_video_id: Opti
 
 def get_experiment(experiment_id: str) -> Optional[dict]:
     return read_json(cache_root() / "experiments" / f"{experiment_id}.json")
+
+
+def run_tipping(video_id: str, n_seeds: Optional[int] = None, grid_points: Optional[int] = None,
+                seeding_strategy: Optional[str] = None, policy_variant: str = "default") -> dict:
+    from app.experiments import tipping_curve
+    profile, pr, rel, _ = _analysis(video_id)
+    out = tipping_curve(get_world(), get_config(), rel, profile.duration_s, pr.percentile, n_seeds=n_seeds,
+                        grid_points=grid_points, seeding_strategy=seeding_strategy, policy_variant=policy_variant)
+    out.update({"video_id": video_id, "prior_method": pr.method, "prior_tag": pr.evidence_tag.value})
+    write_json(cache_root() / "tipping" / f"{video_id}.json", out)
+    return out
+
+
+def run_attention(video_id: str) -> dict:
+    from app.video_analysis.attention import attention_timeline
+    profile, pr, _, _ = _analysis(video_id)
+    out = attention_timeline(profile, pr)
+    return {"video_id": video_id, **out}

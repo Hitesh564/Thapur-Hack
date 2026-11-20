@@ -149,7 +149,7 @@ def compute_relevance(profile: VideoProfile, pop: Population, method: Optional[s
     score = arc_score[pop.archetype_idx]
     rel = relevance_formula(score, lo, hi)
     by_comm = {pop.community_names[c]: float(rel[pop.community == c].mean()) for c in range(pop.n_communities)}
-    res = RelevanceResult(method=used, by_community=by_comm, mean=float(rel.mean()), note=note)
+    res = RelevanceResult(method=used, by_community=by_comm, mean=float(rel.mean()), population_version=pop.version, note=note)
     return rel, res
 
 

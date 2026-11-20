@@ -50,3 +50,14 @@ Format: date — decision — reason.
 - 2026-11-21 — Heuristic prior formula documented in `app/prior/prior.py`, weights in `prior.heuristic`. Ensemble = [p − spread, p, p + spread]. — Robustness loop still has a spread to sample.
 - 2026-11-21 — Test media generated with `gpt-image-2` + `gpt-4o-mini-tts` (`scripts/make_test_media.py`): cooking video with a weak (empty bowl) vs strong (cheese pull) opening, and a gaming video. — Original, license-free fixtures for sanity layer 2 and dev demo. The real demo video is still needed.
 - 2026-11-21 — `VIRALYST_CACHE_DIR` overrides the cache folder (tests use a temp dir). Runs' event logs are kept in memory (last 64) for `/events`; payloads are saved as JSON.
+
+## Backend completion (round 3)
+- 2026-11-21 — Archetypes generated once by `gpt-6.2-sol` (`python -m app.personas.generate`), validated (50 total, 5–8 per community, 3–6 interests, trait bounds from `personas.*`, sensitive-word blocklist), with up to 3 attempts that feed validation errors back. Fallback file unchanged. — PRD §7.1.
+- 2026-11-21 — Relevance results carry the population version; `get_analysis` recomputes relevance if the population changed (CLIP image vectors are cached). — Regenerating personas must not leave stale relevance.
+- 2026-11-21 — Population (Parquet) and graph (NPZ + meta JSON) persisted under `cache/world/` by version.
+- 2026-11-21 — Event logs persisted as Parquet per run; `/events` reads memory first, then Parquet.
+- 2026-11-21 — Exposures-per-sharer breakdown: followers per sharer × unseen fraction × acceptance × cap-and-overlap (exact; counts recorded by the engine per round).
+- 2026-11-21 — Pathway priority follows PRD §11.4 order. Hub/bridge-driven = share of *share-channel* exposures sent by hubs/bridges. Cross-community additionally needs `cross_community_min_fraction` (0.3) of share exposures to cross, because the graph's baseline cross share is 0.2 and almost any cascade touches 3 communities.
+- 2026-11-21 — Tipping curve: main curve with default assumptions (PRD), plus `points_uncertain` where each seed draws its own assumption sample (`tipping.sample_assumptions`). With defaults the curve is a near-cliff around p ≈ 0.45–0.5 (growth hinges on S vs S0); across assumption ranges it is gradual. Both shown.
+- 2026-11-21 — Attention timeline: 8 windows × `video.attention_samples` (2) rubric calls; change within the baseline ensemble's noise is flagged; message names both the supporting and the "drag" window.
+- 2026-11-21 — Mini backtest: harness + empty `data/backtest_pairs.csv`; pairs are collected by hand (local files + public view counts). Rating ties count 0.5. Not run yet — needs data.

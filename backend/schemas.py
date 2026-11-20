@@ -67,6 +67,7 @@ class RelevanceResult(BaseModel):
     method: Literal["clip", "keyword"]
     by_community: dict[str, float] = {}   # community name -> mean relevance
     mean: float = 0.0
+    population_version: str = ""
     note: str = ""
     evidence_tag: EvidenceTag = EvidenceTag.COMPUTED
 
@@ -156,6 +157,10 @@ class RoundMetrics(BaseModel):
     share_exposures_next: int = 0
     R_rec: float = 0
     R_share: float = 0
+    # exposures_per_sharer breakdown (display): edges from this round's sharers to followers
+    sharer_follower_edges: int = 0
+    sharer_unseen_edges: int = 0
+    sharer_accepted_edges: int = 0
     evidence_tag: EvidenceTag = EvidenceTag.SIMULATED
 
 

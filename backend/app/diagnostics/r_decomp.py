@@ -125,3 +125,41 @@ def diagnose_r(log: EventLog, P: Params, n_communities: int) -> dict:
         by_comm[cidx] = {"rounds": crow, "pooled": cpool, "binding": cb, "factors": cf}
     return {"rounds": rows, "pooled": pool, "R": pool.get("R", pool["R_share"]),
             "binding": binding, "factors": factors, "by_community": by_comm}
+
+
+def share_breakdown(rows: list[dict], rounds_metrics: list) -> dict:
+    """exposures_per_sharer = followers_per_sharer x unseen_fraction x acceptance x cap_and_overlap.
+
+    Exact identity (display only), pooled over rounds that have a following round.
+    The last factor is the share of accepted follower edges that became exposures after the
+    per-sharer fan-out cap and de-duplication between sharers.
+    """
+    idx = [i for i, r in enumerate(rows) if r["has_next"]] or list(range(len(rows)))
+    sharers = sum(rows[i]["sharers"] for i in idx)
+    exposed = sum(rows[i]["share_exposures_next"] for i in idx)
+    edges = sum(rounds_metrics[i].sharer_follower_edges for i in idx)
+    unseen = sum(rounds_metrics[i].sharer_unseen_edges for i in idx)
+    accepted = sum(rounds_metrics[i].sharer_accepted_edges for i in idx)
+    return {
+        "followers_per_sharer": _div(edges, sharers),
+        "unseen_fraction": _div(unseen, edges),
+        "acceptance": _div(accepted, unseen),
+        "cap_and_overlap": _div(exposed, accepted),
+        "exposures_per_sharer": _div(exposed, sharers),
+        "evidence_tag": "SIMULATED",
+    }
+
+
+def stop_explanation(stop_reason: str, rows: list[dict], S_last: float, S0: float) -> dict:
+    """Plain-language reason the run ended, with the R of the last observed round."""
+    observed = [r for r in rows if r["has_next"]]
+    R_last = observed[-1]["R"] if observed else 0.0
+    text = {
+        "low_signal": (f"Recommendation stopped because the expansion score stayed below the policy threshold "
+                       f"(last {S_last:.2f} < S0 {S0:.2f}) for consecutive rounds, in this simulated run."),
+        "max_rounds": "The run reached the maximum number of rounds while still spreading, in this simulated run.",
+        "budget": "The exposure budget was used up, in this simulated run.",
+        "no_eligible_viewers": "Every viewer in the population had already been exposed, in this simulated run.",
+        "no_exposures": "No new viewers were exposed in a round (no shares and an empty recommendation batch), in this simulated run.",
+    }.get(stop_reason, stop_reason)
+    return {"stop_reason": stop_reason, "message": text, "R_last_observed_round": R_last, "evidence_tag": "SIMULATED"}

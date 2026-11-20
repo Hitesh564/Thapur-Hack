@@ -72,6 +72,7 @@ def analyze(video_id: str, req: AnalyzeRequest = AnalyzeRequest()) -> dict:
 
 @app.get("/videos/{video_id}/analysis")
 def analysis(video_id: str) -> dict:
+    get_analysis(video_id)  # refreshes relevance if the population changed
     bundle = read_json(video_dir(video_id) / "analysis_bundle.json")
     if not bundle:
         raise HTTPException(404, "not analysed yet")
@@ -92,6 +93,17 @@ def source(video_id: str):
         return FileResponse(get_meta(video_id)["source_path"])
     except KeyError as e:
         raise HTTPException(404) from e
+
+
+@app.post("/videos/{video_id}/attention")
+def attention(video_id: str) -> dict:
+    from app.video_analysis import VLMUnavailable
+    try:
+        return service.run_attention(video_id)
+    except service.NotAnalysed as e:
+        raise HTTPException(409, str(e)) from e
+    except VLMUnavailable as e:
+        raise HTTPException(503, f"Attention-risk timeline unavailable: {e}") from e
 
 
 # ---- audience -----------------------------------------------------------------
@@ -194,6 +206,23 @@ def get_experiment(experiment_id: str) -> dict:
     return rec
 
 
+# ---- tipping-point curve -----------------------------------------------------
+class TippingRequest(BaseModel):
+    video_id: str
+    n_seeds: Optional[int] = None
+    grid_points: Optional[int] = None
+    seeding_strategy: Optional[str] = None
+    policy_variant: str = "default"
+
+
+@app.post("/tipping")
+def tipping(req: TippingRequest) -> dict:
+    try:
+        return service.run_tipping(**req.model_dump())
+    except service.NotAnalysed as e:
+        raise HTTPException(409, str(e)) from e
+
+
 # ---- ledger -------------------------------------------------------------------
 @app.get("/ledger")
 def ledger(video_id: Optional[str] = None, run_id: Optional[str] = None, experiment_id: Optional[str] = None) -> dict:
@@ -205,4 +234,19 @@ def ledger(video_id: Optional[str] = None, run_id: Optional[str] = None, experim
         run = RunSummary.model_validate(r["summary"])
     if experiment_id and (e := service.get_experiment(experiment_id)):
         exp = ExperimentResult.model_validate(e["result"])
-    return build_ledger(cfg, prior=prior, relevance_by_community=rel, run=run, experiment=exp)
+    from app.experiments.backtest import latest_backtest
+    return build_ledger(cfg, prior=prior, relevance_by_community=rel, run=run, experiment=exp, backtest=latest_backtest())
+
+
+@app.get("/backtest")
+def backtest() -> dict:
+    from app.experiments.backtest import latest_backtest, load_pairs
+    res = latest_backtest()
+    return res or {"n": 0, "pairs_in_csv": len(load_pairs()), "label": "Not validated against real outcomes.",
+                   "evidence_tag": "MEASURED"}
+
+
+@app.post("/backtest")
+def backtest_run() -> dict:
+    from app.experiments.backtest import run_backtest
+    return run_backtest()

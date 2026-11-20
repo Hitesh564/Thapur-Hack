@@ -17,6 +17,7 @@ import numpy as np
 
 from app.behaviour.chain import ACTIONS, evaluate
 from app.config import Params
+from app.diagnostics.pathways import classify
 from app.eventlog.log import CH, EventLog, build_event_log
 from app.graph.sbm import Graph
 from app.personas.population import Population
@@ -128,8 +129,9 @@ def simulate(inp: SimInputs, seed: int, U: Optional[np.ndarray] = None) -> RunRe
         if t > 0:
             sharers = np.flatnonzero((st["round"] == t - 1) & st["act_share"])
             remaining = budget - int(st["exposed"].sum())
+            share_counts: dict = {}
             sh_t, sh_s = share_exposures(sharers, graph.adj, ~st["exposed"], U[t, :, D["accept"]],
-                                         U[t, :, D["tiebreak"]], accept_prob, fanout)
+                                         U[t, :, D["tiebreak"]], accept_prob, fanout, share_counts)
             sh_t, sh_s = sh_t[:max(remaining, 0)], sh_s[:max(remaining, 0)]
             expose(sh_t, t, CH["share"], sh_s)
             B = pol.next_batch(B, S_prev)
@@ -144,6 +146,9 @@ def simulate(inp: SimInputs, seed: int, U: Optional[np.ndarray] = None) -> RunRe
             prev.share_exposures_next = int(sh_t.size)
             prev.R_rec = rec.size / E_prev
             prev.R_share = sh_t.size / E_prev
+            prev.sharer_follower_edges = share_counts["follower_edges"]
+            prev.sharer_unseen_edges = share_counts["unseen_edges"]
+            prev.sharer_accepted_edges = share_counts["accepted_edges"]
             new = np.sort(np.concatenate([sh_t, rec]))
             if new.size == 0:
                 stop_reason = "no_exposures"
@@ -195,12 +200,15 @@ def simulate(inp: SimInputs, seed: int, U: Optional[np.ndarray] = None) -> RunRe
 
     reach = int(st["exposed"].sum())
     reach_pct = reach / n
+    depth = int(st["generation"].max()) if reach else 0
+    milestone = bool(reach_pct >= float(P["tipping.milestone_pct"]))
+    paths = classify(log, P, stop_reason, len(rounds), depth, milestone)
     summary = RunSummary(
         run_id=run_id, unique_reach=reach, reach_pct=reach_pct, rounds=len(rounds),
-        depth=int(st["generation"].max()) if reach else 0,
+        depth=depth,
         communities_reached=int(np.unique(pop.community[st["exposed"]]).size),
         total_shares=int(st["act_share"].sum()), rounds_metrics=rounds,
-        reached_milestone=bool(reach_pct >= float(P["tipping.milestone_pct"])),
+        pathways=paths["matches"], reached_milestone=milestone,
     )
     config = RunConfig(
         run_id=run_id, video_id=inp.video_id, seed=int(seed),
