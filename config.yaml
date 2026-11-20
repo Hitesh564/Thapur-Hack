@@ -30,12 +30,38 @@ prior:
   clip_max: 0.95
   hypothetical_delta: 0.10
   rubric: [immediate_clarity, curiosity, visual_impact, pacing, payoff_clarity, audience_fit]
+  rubric_min: 1
+  rubric_max: 10
+  heuristic:                  # fallback prior (ASSUMED); documented formula in app/prior/heuristic.py
+    base: 0.5
+    spread: 0.05              # ensemble = [p - spread, p, p + spread]
+    w_duration: 0.08
+    ideal_duration_s: [8, 35]
+    w_cuts: 0.10
+    ref_cut_rate: 0.4         # cuts per second in the opening window
+    w_motion: 0.10
+    ref_motion: 0.06          # mean abs frame difference (0-1) in the opening window
+    w_audio: 0.04
+
+vlm:
+  provider: openai
+  model: gpt-6.2-sol
+  fallback_models: [gpt-5.5]
+  transcribe_model: gpt-4o-transcribe
+  timeout_s: 180
+  max_retries: 1              # retries per model on invalid JSON
+  max_frame_px: 768
+  jpeg_quality: 85
 
 relevance:
   w_rel: 0.5
   k: 1.0
-  cos_lo: 0.15
-  cos_hi: 0.35
+  cos_lo: 0.05                # tuned by inspection for ViT-L-14 datacomp (matched ~0.15-0.20, unrelated ~0.0-0.07)
+  cos_hi: 0.22
+  clip_model: ViT-L-14
+  clip_pretrained: datacomp_xl_s13b_b90k
+  text_template: "a short video about {}"
+  keyword_floor: 0.0          # fallback relevance: minimum overlap score
 
 behaviour:
   q_min:  {default: 0.30, min: 0.25, max: 0.40}
@@ -127,7 +153,12 @@ tipping:
   p_max: 0.95
 
 video:
-  max_seconds: 60
+  min_seconds: 3
+  max_seconds: 90             # PRD target 5-60 s; small tolerance either side
+  allowed_ext: [.mp4, .mov, .m4v, .webm, .mkv]
+  cut_scan_fps: 10
+  cut_threshold: 0.45         # 1 - HSV histogram correlation between scanned frames
+  cut_min_gap_s: 0.3
   uniform_frames: 8
   opening_frames: 4
   opening_seconds: 3

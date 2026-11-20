@@ -38,11 +38,18 @@ class VideoProfile(BaseModel):
     subtopics: list[str] = []
     summary: str = ""
     format: str = ""
+    narrative_structure: str = ""
     audience_interest_tags: list[str] = []
     transcript: str = ""
     cut_times_s: list[float] = []
     hook: HookAnalysis = HookAnalysis()
     frame_paths: list[str] = []
+    frame_times_s: list[float] = []
+    opening_frame_paths: list[str] = []
+    opening_frame_times_s: list[float] = []
+    features: dict[str, float] = {}       # COMPUTED: cut_rate, motion_energy, opening_motion, ...
+    analysis_source: str = "none"         # "vlm:<model>" | "cache" | "none" (display-only fields empty)
+    notes: list[str] = []                 # fallbacks and gaps, shown in the UI
 
 
 class PriorResult(BaseModel):
@@ -51,6 +58,17 @@ class PriorResult(BaseModel):
     method: Literal["vlm_rubric", "heuristic", "hypothetical"] = "vlm_rubric"
     rubric_scores: dict[str, float] = {}
     evidence_tag: EvidenceTag = EvidenceTag.MODEL_RATED
+    model: str = ""
+    rationale: str = ""
+    note: str = ""
+
+
+class RelevanceResult(BaseModel):
+    method: Literal["clip", "keyword"]
+    by_community: dict[str, float] = {}   # community name -> mean relevance
+    mean: float = 0.0
+    note: str = ""
+    evidence_tag: EvidenceTag = EvidenceTag.COMPUTED
 
 
 TRAIT_KEYS = ("attention", "like", "comment", "save", "share")
@@ -152,6 +170,7 @@ class RunSummary(BaseModel):
     rounds_metrics: list[RoundMetrics] = []
     pathways: list[str] = []
     reached_milestone: bool = False
+    evidence_tag: EvidenceTag = EvidenceTag.SIMULATED
 
 
 class DiagnosisItem(BaseModel):

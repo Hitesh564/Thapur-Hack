@@ -40,7 +40,9 @@ def test_every_config_key_used_in_code_exists(cfg):
     pat = re.compile(rf'"((?:{sections})\.[A-Za-z0-9_.]+)"')
     used = set()
     for f in APP.rglob("*.py"):
-        used |= set(pat.findall(f.read_text(encoding="utf-8")))
+        used |= {k for k in pat.findall(f.read_text(encoding="utf-8"))
+                 if k.rsplit(".", 1)[-1] not in {"json", "npy", "parquet", "jpg", "mp3", "md"}}
+    used |= {f"prior.heuristic.{k}" for k in cfg.get("prior.heuristic")}
     # keys built with f-strings
     used |= {f"behaviour.base_{a}" for a in ACTIONS}
     used |= {f"policy.variants.{v}" for v in POLICY_VARIANTS if v != "default"}
