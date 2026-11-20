@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+numpy
+scipy
+networkx
+pydantic>=2
+pyyaml
+pandas
+pyarrow
+pytest
+httpx
+opencv-python-headless
+scenedetect

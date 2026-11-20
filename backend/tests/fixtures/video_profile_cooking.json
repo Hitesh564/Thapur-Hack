@@ -1,0 +1,24 @@
+{
+  "video_id": "fixture-cooking",
+  "file_hash": "fixture0000cooking",
+  "duration_s": 28.0,
+  "width": 1080, "height": 1920, "fps": 30.0, "has_audio": true,
+  "topic": "15-minute garlic butter pasta",
+  "category": "Food & Cooking",
+  "subtopics": ["pasta", "quick dinner", "garlic butter"],
+  "summary": "A home cook makes garlic butter pasta in 15 minutes with close-up shots.",
+  "format": "tutorial",
+  "audience_interest_tags": ["home cooking recipes", "weeknight dinners", "kitchen tips"],
+  "transcript": "This pasta takes fifteen minutes and one pan.",
+  "cut_times_s": [1.2, 3.5, 6.0, 9.8, 14.1, 19.0, 24.5],
+  "hook": {
+    "categories": ["promise", "visual payoff"],
+    "opening_window_s": 3.0,
+    "strengths": ["states the payoff in the first second"],
+    "weaknesses": ["first frame is a static bowl"],
+    "evidence": ["0.4s: text overlay '15-minute pasta'"],
+    "suggested_improvement": "Open on the cheese pull, then state the time.",
+    "confidence": 0.6
+  },
+  "frame_paths": []
+}

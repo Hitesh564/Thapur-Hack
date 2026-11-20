@@ -1,0 +1,135 @@
+# Viralyst config. ALL numbers are placeholders/assumptions unless noted. Format: {default, min, max}.
+# Robustness loop samples every entry that has min/max uniformly in [min, max].
+
+meta:
+  version: "0.1"
+  note: "Assumed parameters. Not fitted to real data."
+
+population:
+  n_viewers: 4000
+  n_archetypes: 50
+  n_communities: 8
+  seed_pct: 0.015
+  trait_noise: 0.15
+  trait_noise_clip: 2.0        # noise bounded to +/- this many std devs
+  default_seed: 7
+  influence_class_mult: {low: 0.5, medium: 1.0, high: 3.0}
+
+graph:
+  mean_out_degree: 12
+  intra_community_ratio: 0.8
+  influence_pareto_alpha: 2.0
+  hub_pct: 0.02
+  bridge_pct: 0.03
+  bridge_extra_edges: 4
+
+prior:
+  method: vlm_rubric          # vlm_rubric | heuristic
+  vlm_samples: 3
+  clip_min: 0.05
+  clip_max: 0.95
+  hypothetical_delta: 0.10
+  rubric: [immediate_clarity, curiosity, visual_impact, pacing, payoff_clarity, audience_fit]
+
+relevance:
+  w_rel: 0.5
+  k: 1.0
+  cos_lo: 0.15
+  cos_hi: 0.35
+
+behaviour:
+  q_min:  {default: 0.30, min: 0.25, max: 0.40}
+  q_max:  {default: 0.80, min: 0.70, max: 0.90}
+  a_rel:  {default: 1.0,  min: 0.5,  max: 2.0}
+  c_attn: {default: 1.0,  min: 0.5,  max: 1.5}
+  m_min:  {default: 0.30, min: 0.20, max: 0.40}
+  m_max:  {default: 0.70, min: 0.60, max: 0.80}
+  d_rel:  {default: 0.8,  min: 0.4,  max: 1.5}
+  d_attn: {default: 0.5,  min: 0.2,  max: 1.0}
+  d_dur:  {default: 0.3,  min: 0.0,  max: 0.6}
+  kappa_f: {default: 4.0, min: 2.0,  max: 8.0}
+  completion_threshold: 0.9
+  ref_duration_s: 30          # duration term uses ln(duration / ref_duration_s)
+  attn_centre: 0.5            # attention term uses (attn - attn_centre)
+  action_offset: 0.5          # actions use (offset + rel) * (offset + watch_fraction)
+  base_like:    {default: 0.05,  min: 0.02,  max: 0.10}
+  base_comment: {default: 0.008, min: 0.003, max: 0.02}
+  base_save:    {default: 0.015, min: 0.005, max: 0.04}
+  base_share:   {default: 0.02,  min: 0.008, max: 0.05}   # keep < base_like
+
+policy:
+  alpha: {default: 0.4, min: 0.2, max: 0.6}   # stay
+  beta:  {default: 0.3, min: 0.1, max: 0.5}   # watch fraction
+  gamma: {default: 0.1, min: 0.05, max: 0.2}  # like
+  delta: {default: 0.2, min: 0.1, max: 0.4}   # share
+  S0:    {default: 0.40, min: 0.30, max: 0.55}
+  kappa: {default: 2.0, min: 1.0, max: 4.0}
+  epsilon: {default: 0.2, min: 0.05, max: 0.4}
+  B0: 100
+  B_max: 1500
+  max_rounds: 10
+  exposure_budget_pct: 1.0
+  low_signal_stop_rounds: 2
+  variants:
+    conservative:    {S0_add: 0.10}
+    exploratory:     {epsilon_set: 0.40}
+    interest_tight:  {epsilon_set: 0.0}
+
+sharing:
+  accept_prob: {default: 0.5, min: 0.3, max: 0.8}
+  fanout_cap: 10
+
+seeding:
+  strategy: mixed        # random | relevance_biased | mixed | community_targeted
+  mixed_relevance_share: 0.5
+  target_community: null # community_targeted: null = community with highest mean relevance
+
+experiments:
+  base_seed: 1000
+  default_metric: unique_reach
+
+robustness:
+  n_seeds: 30
+  n_assumption_samples: 10
+  robust_threshold: 0.8
+  likely_threshold: 0.6
+  interval: [0.1, 0.9]
+
+diagnosis:
+  # "healthy" reference values for binding-constraint ratios
+  ref_stay_rate: 0.55
+  ref_share_given_stay: 0.04
+  ref_exposures_per_sharer: 4.0
+  ref_rec_batch_ratio: 1.0
+  thresholds:
+    weak_attention_stay: 0.35
+    low_relevance_new_community: 0.35
+    retention_watchfrac: 0.40
+    low_share_rate: 0.015
+    community_saturation: 0.7
+    cross_community_share: 0.1
+    stochastic_failure_other_seeds: 0.5
+    limited_audience_share: 0.15   # share of population with relevance >= low_relevance_new_community
+
+pathways:
+  early_failure_rounds: 3
+  niche_top_community_share: 0.7
+  hub_driven_share: 0.4
+  bridge_driven_share: 0.3
+  cross_community_min_communities: 3
+  broad_shallow_depth: 3
+  deep_narrow_depth: 6
+
+tipping:
+  grid_points: 15
+  milestone_pct: 0.25
+  p_min: 0.05
+  p_max: 0.95
+
+video:
+  max_seconds: 60
+  uniform_frames: 8
+  opening_frames: 4
+  opening_seconds: 3
+  attention_windows: 8
+  cache_dir: cache

@@ -1,0 +1,2106 @@
+[
+ {
+  "name": "Home Cook",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "home cooking recipes",
+    "strength": 0.9
+   },
+   {
+    "phrase": "weeknight dinners",
+    "strength": 0.7
+   },
+   {
+    "phrase": "kitchen tips",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Baking Enthusiast",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "baking bread and cakes",
+    "strength": 0.9
+   },
+   {
+    "phrase": "pastry techniques",
+    "strength": 0.7
+   },
+   {
+    "phrase": "dessert decorating",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Street Food Explorer",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "street food",
+    "strength": 0.9
+   },
+   {
+    "phrase": "food markets",
+    "strength": 0.7
+   },
+   {
+    "phrase": "spicy food challenges",
+    "strength": 0.5
+   },
+   {
+    "phrase": "travel eats",
+    "strength": 0.4
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Meal Prepper",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "meal prep",
+    "strength": 0.9
+   },
+   {
+    "phrase": "high protein recipes",
+    "strength": 0.7
+   },
+   {
+    "phrase": "grocery budgeting",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Restaurant Reviewer",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "restaurant reviews",
+    "strength": 0.9
+   },
+   {
+    "phrase": "fine dining",
+    "strength": 0.6
+   },
+   {
+    "phrase": "food critique",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Vegan Recipe Fan",
+  "community": 0,
+  "community_name": "Food & Cooking",
+  "interests": [
+   {
+    "phrase": "vegan recipes",
+    "strength": 0.9
+   },
+   {
+    "phrase": "plant based cooking",
+    "strength": 0.8
+   },
+   {
+    "phrase": "easy salads",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Competitive Gamer",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "competitive esports",
+    "strength": 0.9
+   },
+   {
+    "phrase": "fps gameplay",
+    "strength": 0.8
+   },
+   {
+    "phrase": "ranked tips",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Cozy Gamer",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "cozy farming games",
+    "strength": 0.9
+   },
+   {
+    "phrase": "indie games",
+    "strength": 0.7
+   },
+   {
+    "phrase": "relaxing gameplay",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Speedrun Watcher",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "speedruns",
+    "strength": 0.9
+   },
+   {
+    "phrase": "game glitches",
+    "strength": 0.7
+   },
+   {
+    "phrase": "retro platformers",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Mobile Gamer",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "mobile games",
+    "strength": 0.9
+   },
+   {
+    "phrase": "game memes",
+    "strength": 0.6
+   },
+   {
+    "phrase": "gacha pulls",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Retro Collector",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "retro consoles",
+    "strength": 0.9
+   },
+   {
+    "phrase": "game collecting",
+    "strength": 0.8
+   },
+   {
+    "phrase": "arcade machines",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Game Lore Fan",
+  "community": 1,
+  "community_name": "Gaming",
+  "interests": [
+   {
+    "phrase": "video game lore",
+    "strength": 0.9
+   },
+   {
+    "phrase": "story games",
+    "strength": 0.7
+   },
+   {
+    "phrase": "fan theories",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Gym Lifter",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "weightlifting",
+    "strength": 0.9
+   },
+   {
+    "phrase": "gym workouts",
+    "strength": 0.8
+   },
+   {
+    "phrase": "muscle building tips",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Runner",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "running training",
+    "strength": 0.9
+   },
+   {
+    "phrase": "marathon prep",
+    "strength": 0.7
+   },
+   {
+    "phrase": "running shoes",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Yoga Practitioner",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "yoga flows",
+    "strength": 0.9
+   },
+   {
+    "phrase": "stretching routines",
+    "strength": 0.7
+   },
+   {
+    "phrase": "mindful movement",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Football Fan",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "football highlights",
+    "strength": 0.9
+   },
+   {
+    "phrase": "goal compilations",
+    "strength": 0.8
+   },
+   {
+    "phrase": "match reactions",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Home Workout Beginner",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "home workouts",
+    "strength": 0.9
+   },
+   {
+    "phrase": "beginner exercises",
+    "strength": 0.8
+   },
+   {
+    "phrase": "quick routines",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Climber",
+  "community": 2,
+  "community_name": "Fitness & Sport",
+  "interests": [
+   {
+    "phrase": "rock climbing",
+    "strength": 0.9
+   },
+   {
+    "phrase": "bouldering",
+    "strength": 0.8
+   },
+   {
+    "phrase": "outdoor adventure",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Skincare Routine Fan",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "skincare routines",
+    "strength": 0.9
+   },
+   {
+    "phrase": "product reviews",
+    "strength": 0.7
+   },
+   {
+    "phrase": "morning routines",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Makeup Artist",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "makeup tutorials",
+    "strength": 0.9
+   },
+   {
+    "phrase": "eyeliner techniques",
+    "strength": 0.7
+   },
+   {
+    "phrase": "transformations",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Thrift Fashion Hunter",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "thrift hauls",
+    "strength": 0.9
+   },
+   {
+    "phrase": "outfit ideas",
+    "strength": 0.8
+   },
+   {
+    "phrase": "sustainable fashion",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Streetwear Fan",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "streetwear outfits",
+    "strength": 0.9
+   },
+   {
+    "phrase": "sneakers",
+    "strength": 0.8
+   },
+   {
+    "phrase": "fashion drops",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Nail Art Lover",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "nail art",
+    "strength": 0.9
+   },
+   {
+    "phrase": "manicure designs",
+    "strength": 0.8
+   },
+   {
+    "phrase": "satisfying close ups",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Hair Styling Fan",
+  "community": 3,
+  "community_name": "Beauty & Fashion",
+  "interests": [
+   {
+    "phrase": "hairstyle tutorials",
+    "strength": 0.9
+   },
+   {
+    "phrase": "braids",
+    "strength": 0.7
+   },
+   {
+    "phrase": "hair transformations",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Gadget Reviewer Fan",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "gadget reviews",
+    "strength": 0.9
+   },
+   {
+    "phrase": "unboxing",
+    "strength": 0.8
+   },
+   {
+    "phrase": "smartphones",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Coder",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "programming tutorials",
+    "strength": 0.9
+   },
+   {
+    "phrase": "software engineering",
+    "strength": 0.7
+   },
+   {
+    "phrase": "coding tips",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "PC Builder",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "pc building",
+    "strength": 0.9
+   },
+   {
+    "phrase": "graphics cards",
+    "strength": 0.7
+   },
+   {
+    "phrase": "desk setups",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "AI Tools Explorer",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "ai tools",
+    "strength": 0.9
+   },
+   {
+    "phrase": "productivity apps",
+    "strength": 0.6
+   },
+   {
+    "phrase": "tech news",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Phone Photography Fan",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "phone photography",
+    "strength": 0.9
+   },
+   {
+    "phrase": "photo editing",
+    "strength": 0.7
+   },
+   {
+    "phrase": "camera tips",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Smart Home Tinkerer",
+  "community": 4,
+  "community_name": "Tech & Gadgets",
+  "interests": [
+   {
+    "phrase": "smart home gadgets",
+    "strength": 0.9
+   },
+   {
+    "phrase": "electronics projects",
+    "strength": 0.7
+   },
+   {
+    "phrase": "home automation",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Sketch Comedy Fan",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "sketch comedy",
+    "strength": 0.9
+   },
+   {
+    "phrase": "funny skits",
+    "strength": 0.8
+   },
+   {
+    "phrase": "relatable humour",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Meme Curator",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "internet memes",
+    "strength": 0.9
+   },
+   {
+    "phrase": "viral trends",
+    "strength": 0.7
+   },
+   {
+    "phrase": "reaction clips",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Pet Video Lover",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "funny pets",
+    "strength": 0.9
+   },
+   {
+    "phrase": "cute cats and dogs",
+    "strength": 0.9
+   },
+   {
+    "phrase": "animal videos",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Prank Watcher",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "pranks",
+    "strength": 0.9
+   },
+   {
+    "phrase": "hidden camera",
+    "strength": 0.6
+   },
+   {
+    "phrase": "challenges",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Movie Buff",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "movie reviews",
+    "strength": 0.9
+   },
+   {
+    "phrase": "film trivia",
+    "strength": 0.7
+   },
+   {
+    "phrase": "trailers",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Music Discovery Fan",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "new music",
+    "strength": 0.9
+   },
+   {
+    "phrase": "song covers",
+    "strength": 0.7
+   },
+   {
+    "phrase": "live performances",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Dance Trend Follower",
+  "community": 5,
+  "community_name": "Comedy & Entertainment",
+  "interests": [
+   {
+    "phrase": "dance trends",
+    "strength": 0.9
+   },
+   {
+    "phrase": "choreography",
+    "strength": 0.7
+   },
+   {
+    "phrase": "viral songs",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Budget Backpacker",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "budget travel",
+    "strength": 0.9
+   },
+   {
+    "phrase": "backpacking",
+    "strength": 0.8
+   },
+   {
+    "phrase": "hostels",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Van Life Dreamer",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "van life",
+    "strength": 0.9
+   },
+   {
+    "phrase": "road trips",
+    "strength": 0.8
+   },
+   {
+    "phrase": "camping",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Hiker",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "hiking trails",
+    "strength": 0.9
+   },
+   {
+    "phrase": "mountains",
+    "strength": 0.8
+   },
+   {
+    "phrase": "nature views",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Luxury Travel Fan",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "luxury hotels",
+    "strength": 0.9
+   },
+   {
+    "phrase": "resorts",
+    "strength": 0.7
+   },
+   {
+    "phrase": "first class travel",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "Beach Lover",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "beaches",
+    "strength": 0.9
+   },
+   {
+    "phrase": "islands",
+    "strength": 0.8
+   },
+   {
+    "phrase": "snorkelling",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.25,
+    0.45
+   ],
+   "like": [
+    0.7,
+    1.1
+   ],
+   "comment": [
+    0.4,
+    0.8
+   ],
+   "save": [
+    0.4,
+    0.8
+   ],
+   "share": [
+    0.8,
+    1.3
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "City Explorer",
+  "community": 6,
+  "community_name": "Travel & Outdoors",
+  "interests": [
+   {
+    "phrase": "city guides",
+    "strength": 0.9
+   },
+   {
+    "phrase": "hidden gems",
+    "strength": 0.8
+   },
+   {
+    "phrase": "architecture",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Science Explainer Fan",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "science explainers",
+    "strength": 0.9
+   },
+   {
+    "phrase": "space and physics",
+    "strength": 0.8
+   },
+   {
+    "phrase": "experiments",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "high"
+ },
+ {
+  "name": "History Buff",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "history stories",
+    "strength": 0.9
+   },
+   {
+    "phrase": "ancient civilisations",
+    "strength": 0.7
+   },
+   {
+    "phrase": "documentaries",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Personal Finance Learner",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "personal finance",
+    "strength": 0.9
+   },
+   {
+    "phrase": "saving money",
+    "strength": 0.8
+   },
+   {
+    "phrase": "budgeting tips",
+    "strength": 0.7
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "DIY Home Fixer",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "diy home repair",
+    "strength": 0.9
+   },
+   {
+    "phrase": "home renovation",
+    "strength": 0.8
+   },
+   {
+    "phrase": "tool tips",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.5,
+    0.7
+   ],
+   "like": [
+    1.1,
+    1.6
+   ],
+   "comment": [
+    1.1,
+    1.8
+   ],
+   "save": [
+    0.8,
+    1.2
+   ],
+   "share": [
+    0.8,
+    1.2
+   ]
+  },
+  "influence_class": "medium"
+ },
+ {
+  "name": "Language Learner",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "language learning",
+    "strength": 0.9
+   },
+   {
+    "phrase": "vocabulary tips",
+    "strength": 0.7
+   },
+   {
+    "phrase": "culture facts",
+    "strength": 0.5
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.4,
+    0.6
+   ],
+   "like": [
+    0.5,
+    0.9
+   ],
+   "comment": [
+    0.3,
+    0.7
+   ],
+   "save": [
+    0.6,
+    1.0
+   ],
+   "share": [
+    0.4,
+    0.8
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Woodworker",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "woodworking",
+    "strength": 0.9
+   },
+   {
+    "phrase": "furniture making",
+    "strength": 0.8
+   },
+   {
+    "phrase": "satisfying craftsmanship",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.6,
+    0.85
+   ],
+   "like": [
+    0.8,
+    1.2
+   ],
+   "comment": [
+    0.6,
+    1.0
+   ],
+   "save": [
+    1.2,
+    1.8
+   ],
+   "share": [
+    0.7,
+    1.1
+   ]
+  },
+  "influence_class": "low"
+ },
+ {
+  "name": "Productivity Seeker",
+  "community": 7,
+  "community_name": "Learning & DIY",
+  "interests": [
+   {
+    "phrase": "productivity hacks",
+    "strength": 0.9
+   },
+   {
+    "phrase": "study tips",
+    "strength": 0.8
+   },
+   {
+    "phrase": "life advice",
+    "strength": 0.6
+   }
+  ],
+  "traits": {
+   "attention": [
+    0.45,
+    0.65
+   ],
+   "like": [
+    0.9,
+    1.3
+   ],
+   "comment": [
+    0.7,
+    1.1
+   ],
+   "save": [
+    0.7,
+    1.1
+   ],
+   "share": [
+    1.3,
+    2.0
+   ]
+  },
+  "influence_class": "medium"
+ }
+]

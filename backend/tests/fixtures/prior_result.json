@@ -1,0 +1,7 @@
+{
+  "percentile": 0.55,
+  "ensemble": [0.5, 0.55, 0.6],
+  "method": "vlm_rubric",
+  "rubric_scores": {"immediate_clarity": 6, "curiosity": 5, "visual_impact": 6, "pacing": 5, "payoff_clarity": 6, "audience_fit": 5},
+  "evidence_tag": "MODEL_RATED"
+}
