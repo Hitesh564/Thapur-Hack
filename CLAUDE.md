@@ -2,6 +2,8 @@
 
 Read `docs/PRD.md` fully first. Then `TASKS.md`. Parameters live in `config.yaml`; contracts in `backend/schemas.py`.
 
+**Open task:** switching the VLM from OpenAI to a local Hugging Face model. If you are picking this up, read `docs/HANDOFF_LOCAL_VLM.md` first; it has the full context, plan and acceptance checklist.
+
 ## What we are building
 A short-form video **propagation experiment lab**: analyse a video, simulate a synthetic audience spreading it over a community graph, run matched A/B experiments with seed- and assumption-robustness, diagnose stalls, and label every number with an evidence tag. 20–24 hour hackathon build. No dataset, no training.
 
