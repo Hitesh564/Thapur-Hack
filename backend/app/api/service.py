@@ -72,7 +72,7 @@ def run_payload(run: RunResult, rel: np.ndarray, P: Params, other_seed_milestone
     bottlenecks = find_bottlenecks(run.log, P, rel, run.rounds, run.stop_reason, np.bincount(pop.community),
                                    resolve_policy(P, run.config.policy_variant).S0,
                                    other_seed_milestone_rate=other_seed_milestone_rate,
-                                   reached_milestone=run.summary.reached_milestone)
+                                   reached_milestone=run.summary.reached_milestone, community_names=names)
     return {
         "run_id": run.run_id,
         "config": run.config.model_dump(mode="json"),
@@ -179,3 +179,53 @@ def run_attention(video_id: str) -> dict:
     profile, pr, _, _ = _analysis(video_id)
     out = attention_timeline(profile, pr)
     return {"video_id": video_id, **out}
+
+
+def _log_for(run_id: str):
+    with _lock:
+        entry = _RUNS.get(run_id)
+    if entry is not None:
+        return entry[0].log
+    path = cache_root() / "runs" / f"{run_id}.parquet"
+    if not path.exists():
+        return None
+    return EventLog(run_id, {k: v.to_numpy() for k, v in pd.read_parquet(path).drop(columns="run_id").items()})
+
+
+def get_cascade(run_id: str) -> Optional[dict]:
+    """Compact per-exposure arrays for the animated replay."""
+    from app.eventlog import ET
+    log = _log_for(run_id)
+    if log is None:
+        return None
+    c = log.cols
+    exp = c["event_type"] == ET["exposure"]
+    vid = c["viewer_id"][exp]
+
+    def flag(name: str) -> list[int]:
+        s = set(c["viewer_id"][c["event_type"] == ET[name]].tolist())
+        return [int(v in s) for v in vid.tolist()]
+
+    return {"run_id": run_id, "viewer": vid.tolist(), "round": c["round"][exp].tolist(),
+            "channel": c["channel"][exp].tolist(), "source": c["source_viewer"][exp].tolist(),
+            "stay": flag("watch"), "complete": flag("completion"), "like": flag("like"), "share": flag("share"),
+            "channels": ["seed", "rec", "share"], "evidence_tag": "SIMULATED"}
+
+
+def world_layout() -> dict:
+    """Per-viewer community, role, followers and a deterministic 2-D position (communities on a circle)."""
+    w = get_world()
+    pop, g = w.population, w.graph
+    n, k = pop.n, pop.n_communities
+    rng = np.random.default_rng(0)  # layout only, not simulation randomness
+    ang = 2 * np.pi * pop.community / k
+    cx, cy = np.cos(ang) * 0.62, np.sin(ang) * 0.62
+    r = 0.22 * np.sqrt(rng.random(n))
+    th = 2 * np.pi * rng.random(n)
+    x, y = cx + r * np.cos(th), cy + r * np.sin(th)
+    return {"population_version": pop.version, "graph_version": g.version,
+            "community": pop.community.tolist(), "role": g.role.tolist(), "followers": g.followers.tolist(),
+            "x": np.round(x, 4).tolist(), "y": np.round(y, 4).tolist(),
+            "community_names": pop.community_names,
+            "community_centres": [[float(np.cos(2 * np.pi * c / k) * 0.62), float(np.sin(2 * np.pi * c / k) * 0.62)]
+                                  for c in range(k)]}

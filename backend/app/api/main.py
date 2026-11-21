@@ -50,7 +50,12 @@ def list_videos() -> list[dict]:
     for d in sorted(root.iterdir()):
         meta = read_json(d / "meta.json")
         if meta:
-            out.append({**meta, "analysed": (d / "analysis_bundle.json").exists()})
+            pre = read_json(d / "preprocess.json") or {}
+            frames = pre.get("frame_paths") or []
+            bundle = read_json(d / "analysis_bundle.json")
+            out.append({**meta, "analysed": bool(bundle), "thumb": Path(frames[0]).name if frames else None,
+                        "topic": (bundle or {}).get("profile", {}).get("topic", ""),
+                        "prior": (bundle or {}).get("prior", {}).get("percentile")})
     return out
 
 
@@ -172,6 +177,19 @@ def get_simulation_events(run_id: str, offset: int = 0, limit: int = 1000) -> di
     if ev is None:
         raise HTTPException(404, "events are kept in memory for recent runs only; re-run the simulation")
     return ev
+
+
+@app.get("/simulations/{run_id}/cascade")
+def get_simulation_cascade(run_id: str) -> dict:
+    c = service.get_cascade(run_id)
+    if c is None:
+        raise HTTPException(404)
+    return c
+
+
+@app.get("/world/layout")
+def world_layout() -> dict:
+    return service.world_layout()
 
 
 # ---- experiments --------------------------------------------------------------

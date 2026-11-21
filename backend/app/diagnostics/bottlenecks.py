@@ -32,11 +32,13 @@ def _above(measured: float, threshold: float) -> float:
 def find_bottlenecks(log: EventLog, P: Params, relevance: np.ndarray, rounds_metrics: list,
                      stop_reason: str, community_sizes: np.ndarray, S0: float,
                      other_seed_milestone_rate: Optional[float] = None,
-                     reached_milestone: Optional[bool] = None) -> list[DiagnosisItem]:
+                     reached_milestone: Optional[bool] = None,
+                     community_names: Optional[list[str]] = None) -> list[DiagnosisItem]:
     c = log.cols
     et, rnd, ch, comm, vid = c["event_type"], c["round"], c["channel"], c["community"], c["viewer_id"]
     exp_m = et == ET["exposure"]
     items: list[DiagnosisItem] = []
+    cname = (lambda i: community_names[int(i)]) if community_names else (lambda i: f"Community {int(i)}")
 
     def add(code: str, msg: str, sev: float, **ev: float) -> None:
         items.append(DiagnosisItem(code=code, message=msg + SUFFIX + ".", severity=sev,
@@ -61,7 +63,7 @@ def find_bottlenecks(log: EventLog, P: Params, relevance: np.ndarray, rounds_met
         ids = vid[exp_m & (comm == cc)]
         r = float(relevance[ids].mean())
         if r < th:
-            add("low_relevance_new_community", f"Community {cc} was reached later but its mean relevance was {r:.2f}",
+            add("low_relevance_new_community", f"{cname(cc)} was reached later but its mean relevance was {r:.2f}",
                 _below(r, th), community=cc, mean_relevance=r, threshold=th, viewers=ids.size)
 
     # 3 retention weakness
@@ -93,7 +95,7 @@ def find_bottlenecks(log: EventLog, P: Params, relevance: np.ndarray, rounds_met
     counts = np.bincount(comm[exp_m], minlength=community_sizes.size)
     frac = counts / np.maximum(community_sizes, 1)
     for cc in np.flatnonzero(frac >= th):
-        add("community_saturation", f"Community {cc} is {frac[cc]:.0%} exposed, leaving few new viewers there",
+        add("community_saturation", f"{cname(cc)} is {frac[cc]:.0%} exposed, leaving few new viewers there",
             _above(frac[cc], th), community=cc, exposed_fraction=frac[cc], threshold=th)
 
     # 7 failure to cross communities (share channel)

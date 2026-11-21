@@ -61,3 +61,11 @@ Format: date — decision — reason.
 - 2026-11-21 — Tipping curve: main curve with default assumptions (PRD), plus `points_uncertain` where each seed draws its own assumption sample (`tipping.sample_assumptions`). With defaults the curve is a near-cliff around p ≈ 0.45–0.5 (growth hinges on S vs S0); across assumption ranges it is gradual. Both shown.
 - 2026-11-21 — Attention timeline: 8 windows × `video.attention_samples` (2) rubric calls; change within the baseline ensemble's noise is flagged; message names both the supporting and the "drag" window.
 - 2026-11-21 — Mini backtest: harness + empty `data/backtest_pairs.csv`; pairs are collected by hand (local files + public view counts). Rating ties count 0.5. Not run yet — needs data.
+
+## Frontend
+- 2026-11-21 — React 19 + Vite 8 + TypeScript, no UI/chart libraries: charts are hand-built SVG (line with crosshair tooltip, column/stacked/diverging, horizontal bars with reference line, segmented bar), each with a table view; the cascade replay is a canvas. — Full control over mark specs, small bundle (~86 kB gzip).
+- 2026-11-21 — Colours from the dataviz skill's validated reference palette, light + selected dark. Channels use the first three categorical slots (rec = blue, share = orange, seed = aqua), validated all-pairs; aqua is < 3:1 on light, so channel legends are always shown. Diverging blue/red for signed effects; status colours with icon + label for Robust/Likely/Inconclusive.
+- 2026-11-21 — Opening Replay or Diagnosis auto-runs the baseline simulation, so the demo path is 6 clicks: video → Replay → Diagnosis → Lab → Run experiment → Ledger.
+- 2026-11-21 — Lab defaults the alternate clip to an analysed video with the same topic (else highest prior). Paired-difference histogram shows exact ties as their own grey bar.
+- 2026-11-21 — Backend additions for the UI: `GET /world/layout` (deterministic community-cluster layout), `GET /simulations/{id}/cascade` (compact per-exposure arrays), thumbnails/topic/prior in `GET /videos`, community names in bottleneck messages.
+- 2026-11-21 — `.claude/launch.json` runs both servers (backend via `python -m uvicorn --app-dir backend`).
