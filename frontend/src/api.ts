@@ -1,5 +1,5 @@
 import type {
-  AnalysisBundle, Attention, Audience, Cascade, Drivers, ExperimentRecord, Job, Ledger, RunPayload, SeedingPlan, Surgeon, Tipping,
+  AnalysisBundle, Attention, Audience, Cascade, CounterfactualTrace, Drivers, ExperimentRecord, Job, Ledger, RunPayload, SeedingPlan, Surgeon, Tipping,
   VideoMeta, WorldLayout,
 } from './types'
 
@@ -45,6 +45,7 @@ export const api = {
   seedingLatest: (id: string) => req<SeedingPlan>(`/seeding-plan/${id}`),
   driversStart: (id: string) => post<{ job_id: string }>(`/videos/${id}/drivers`),
   driversLatest: (id: string) => req<Drivers>(`/videos/${id}/drivers`),
+  counterfactual: (body: Record<string, unknown>) => post<CounterfactualTrace>('/counterfactual', body),
   job: <T>(jobId: string) => req<Job<T>>(`/jobs/${jobId}`),
   ledger: (q: { video_id?: string; run_id?: string; experiment_id?: string }) => {
     const qs = new URLSearchParams(Object.entries(q).filter(([, v]) => v) as [string, string][]).toString()

@@ -257,3 +257,49 @@ def run_drivers(video_id: str, progress=None) -> dict:
 
 def latest_drivers(video_id: str) -> Optional[dict]:
     return read_json(cache_root() / "drivers" / f"{video_id}.json")
+
+
+def run_counterfactual(variable: str, baseline_video_id: str, variant_video_id: Optional[str] = None,
+                       hypothetical_delta: Optional[float] = None, baseline_seeding: Optional[str] = None,
+                       variant_seeding: Optional[str] = None, seed: Optional[int] = None) -> dict:
+    """Counterfactual Trace for one representative (or chosen) seed at default assumptions."""
+    from app.diagnostics.counterfactual import representative_seed, trace_pair
+    from app.experiments.matched import p_from_ensemble
+    cfg = get_config()
+    P = Params(cfg)
+    world = get_world()
+    prof_b, pr_b, rel_b, _ = _analysis(baseline_video_id)
+    if variable == "hook_clip":
+        if not variant_video_id:
+            raise ValueError("hook_clip needs variant_video_id")
+        prof_v, pr_v, rel_v, _ = _analysis(variant_video_id)
+        from app.ingestion.upload import get_meta
+        vmeta = get_meta(variant_video_id)
+        p_v, dur_v = pr_v.percentile, prof_v.duration_s
+        label = vmeta.get("edit_title") or vmeta.get("filename") or "alternate clip"
+    elif variable == "hypothetical_hook":
+        delta = float(cfg.get("prior.hypothetical_delta") if hypothetical_delta is None else hypothetical_delta)
+        rel_v, dur_v = rel_b, prof_b.duration_s
+        p_v = p_from_ensemble([pr_b.percentile], 0.0, delta, cfg)
+        label = f"hypothetical +{delta:.2f}"
+    elif variable == "seeding":
+        rel_v, dur_v, p_v, label = rel_b, prof_b.duration_s, pr_b.percentile, f"seeding={variant_seeding}"
+    else:
+        raise ValueError("Counterfactual Trace supports hook_clip, hypothetical_hook and seeding")
+    base = SimInputs(world=world, relevance=rel_b, prior_p=pr_b.percentile, duration_s=prof_b.duration_s, params=P,
+                     seeding_strategy=baseline_seeding, video_id=baseline_video_id)
+    var = SimInputs(world=world, relevance=rel_v, prior_p=p_v, duration_s=dur_v, params=P,
+                    seeding_strategy=variant_seeding if variable == "seeding" else baseline_seeding,
+                    video_id=variant_video_id or baseline_video_id)
+    scan = None
+    if seed is None:
+        base_seed = int(cfg.get("experiments.base_seed"))
+        seeds = [base_seed + i for i in range(int(cfg.get("counterfactual.scan_seeds")))]
+        seed, deltas = representative_seed(base, var, seeds)
+        scan = {"seeds": seeds, "delta_reach": deltas, "median": float(np.median(deltas)),
+                "share_positive": float(np.mean(np.array(deltas) > 0))}
+    out = trace_pair(base, var, seed, world.population.community_names)
+    out.update({"variable": variable, "baseline_video_id": baseline_video_id, "variant_video_id": variant_video_id,
+                "variant_label": label, "prior_baseline": pr_b.percentile, "prior_variant": p_v, "seed_scan": scan,
+                "assumptions": "config defaults"})
+    return out

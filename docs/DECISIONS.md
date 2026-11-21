@@ -79,3 +79,8 @@ Format: date — decision — reason.
 - 2026-11-21 — Hook Surgeon: deterministic edit recipes from detected shots and the cached attention timeline (payoff first, teaser, cut the drag, strongest shot first, trim slow start, swap first two), rendered with ffmpeg, rated with the same rubric prompt (no display-only analysis call), each tested in a matched experiment (15 seeds x 8 samples). Edits are stored as videos with `derived_from` and hidden from the library grid.
 - 2026-11-21 — Long tasks run as in-process background jobs (`/jobs/{id}`) with progress text. OpenAI client timeout 60 s with 1 retry (a hung call previously cost ~3 minutes).
 - 2026-11-21 — `write_json` retries the atomic rename on Windows PermissionError, then writes directly.
+
+## Counterfactual Trace (round 6)
+- 2026-11-21 — Counterfactual Trace (`app/diagnostics/counterfactual.py`, `POST /counterfactual`): baseline and variant on one seed, default assumptions, one shared U; per-viewer comparison. Exact identities (tested): delta reach = seed + rec (same rounds) + rec (rounds only one run reached) + share; share = new sharers + sharers in both - lost; log-batch gap = kappa * sum of per-signal score differences (stay, watch, like, share) over rounds feeding shared rec batches, flagged when the batch hits its cap.
+- 2026-11-21 — The seed shown is the one whose reach difference is the median over `counterfactual.scan_seeds` (21) seeds, with the share of seeds where the variant is ahead, so the example is representative, not cherry-picked.
+- 2026-11-21 — Supported for hook_clip, hypothetical_hook and seeding (same policy in both arms); policy changes alter kappa/S0 so the log-batch split would not be exact.

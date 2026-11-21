@@ -135,6 +135,9 @@ seeding_plan:
   n_samples: 8
   include_communities: true   # also try community_targeted for every community
 
+counterfactual:
+  scan_seeds: 21              # pick the seed whose reach difference is the median of this many seeds
+
 surgeon:
   max_variants: 5
   n_seeds: 15

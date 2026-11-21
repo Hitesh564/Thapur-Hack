@@ -40,7 +40,7 @@ export function VoiPanel({ voi }: { voi: VOI }) {
 }
 
 /** Hook Surgeon: re-cuts of the creator's own shots, each tested in a matched experiment. */
-export function SurgeonCard({ videoId, onUse }: { videoId: string; onUse: (editVideoId: string) => void }) {
+export function SurgeonCard({ videoId, onUse, onTrace }: { videoId: string; onUse: (editVideoId: string) => void; onTrace: (editVideoId: string) => void }) {
   const [res, setRes] = useState<Surgeon | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -85,6 +85,7 @@ export function SurgeonCard({ videoId, onUse }: { videoId: string; onUse: (editV
                       <button className="btn" style={{ padding: '2px 8px' }} onClick={() => setOpen(open === e.name ? null : e.name)}>
                         {open === e.name ? 'Hide' : 'Watch'}</button>
                       <button className="btn" style={{ padding: '2px 8px' }} onClick={() => onUse(e.video_id)}>Full test</button>
+                      <button className="btn" style={{ padding: '2px 8px' }} onClick={() => onTrace(e.video_id)}>Trace why</button>
                     </div></td>
                   </tr>
                 )

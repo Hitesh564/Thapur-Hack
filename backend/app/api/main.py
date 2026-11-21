@@ -298,6 +298,26 @@ def drivers_latest(video_id: str) -> dict:
     return res
 
 
+class CounterfactualRequest(BaseModel):
+    variable: Literal["hook_clip", "hypothetical_hook", "seeding"]
+    baseline_video_id: str
+    variant_video_id: Optional[str] = None
+    hypothetical_delta: Optional[float] = None
+    baseline_seeding: Optional[str] = None
+    variant_seeding: Optional[str] = None
+    seed: Optional[int] = None
+
+
+@app.post("/counterfactual")
+def counterfactual(req: CounterfactualRequest) -> dict:
+    try:
+        return service.run_counterfactual(**req.model_dump())
+    except service.NotAnalysed as e:
+        raise HTTPException(409, str(e)) from e
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
 @app.get("/jobs/{job_id}")
 def job_status(job_id: str) -> dict:
     from app.api import jobs

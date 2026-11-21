@@ -5,6 +5,8 @@ import { Card, ErrorText, Metric, Spinner, Tag, VerdictLabel } from '../componen
 import { int, nice, num, pct, signed } from '../format'
 import type { AnalysisBundle, ExperimentRecord, Tipping, VideoMeta } from '../types'
 import { DriversCard, SeedingPlanCard, SurgeonCard, VoiPanel } from './LabUsps'
+import TraceCard from './TraceCard'
+import type { CounterfactualTrace } from '../types'
 
 type Variable = 'hook_clip' | 'hypothetical_hook' | 'seeding' | 'policy'
 const STRATS = ['mixed', 'random', 'relevance_biased', 'community_targeted']
@@ -25,6 +27,22 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
   const [nSeeds, setNSeeds] = useState(30), [nSamples, setNSamples] = useState(10)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [trace, setTrace] = useState<CounterfactualTrace | null>(null)
+  const [tracing, setTracing] = useState(false)
+
+  const runTrace = async (body: Record<string, unknown>) => {
+    setTracing(true); setError(null)
+    try {
+      setTrace(await api.counterfactual({ baseline_video_id: videoId, ...body }))
+    } catch (e) { setError((e as Error).message) }
+    setTracing(false)
+  }
+  const traceExperiment = (rec: ExperimentRecord) => {
+    const v = rec.config.variable
+    if (v === 'hook_clip') runTrace({ variable: v, variant_video_id: rec.config.variant.video_id })
+    else if (v === 'hypothetical_hook') runTrace({ variable: v, hypothetical_delta: rec.config.variant.p_delta })
+    else if (v === 'seeding') runTrace({ variable: v, baseline_seeding: rec.config.baseline.seeding_strategy, variant_seeding: rec.config.variant.seeding_strategy })
+  }
 
   const runExp = async () => {
     setBusy(true); setError(null)
@@ -81,9 +99,12 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
         {busy && <div style={{ marginTop: 10 }}><Spinner text={`Running ${nSeeds} seeds × ${nSamples} assumption samples × 2 scenarios on shared random draws…`} /></div>}
         <ErrorText error={error} />
       </Card>
-      {exp && <Verdict exp={exp} baselinePrior={bundle.prior.percentile} />}
+      {exp && <Verdict exp={exp} baselinePrior={bundle.prior.percentile}
+        onTrace={exp.config.variable !== 'policy' ? () => traceExperiment(exp) : undefined} tracing={tracing} />}
+      {trace && <div id="trace"><TraceCard trace={trace} onClose={() => setTrace(null)} /></div>}
       {exp?.voi && <VoiPanel voi={exp.voi} />}
-      <SurgeonCard videoId={videoId} onUse={(id) => { setVariable('hook_clip'); setAlt(id); window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
+      <SurgeonCard videoId={videoId} onUse={(id) => { setVariable('hook_clip'); setAlt(id); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+        onTrace={(id) => runTrace({ variable: 'hook_clip', variant_video_id: id })} />
       <SeedingPlanCard videoId={videoId} />
       <DriversCard videoId={videoId} />
       <TippingCard videoId={videoId} />
@@ -91,7 +112,7 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
   )
 }
 
-function Verdict({ exp, baselinePrior }: { exp: ExperimentRecord; baselinePrior: number }) {
+function Verdict({ exp, baselinePrior, onTrace, tracing }: { exp: ExperimentRecord; baselinePrior: number; onTrace?: () => void; tracing?: boolean }) {
   const r = exp.result
   const A = exp.assumption_samples.length
   const wins = Math.round(r.assumption_stability * A)
@@ -132,6 +153,7 @@ function Verdict({ exp, baselinePrior }: { exp: ExperimentRecord; baselinePrior:
             <p className="note">{r.note} Robust = both rates ≥ 80%; Likely = both ≥ 60%. A simulated scenario, not proof of a causal effect.</p>
             {isHyp && <p className="warnnote">Hypothetical experiment: the variant's prior is the baseline's plus a fixed amount. Not a real clip.</p>}
             {pVar != null && <p className="secondary small">Prior baseline {num(baselinePrior)} → variant {num(pVar)} <Tag t="MODEL_RATED" /></p>}
+            {onTrace && <button className="btn primary" onClick={onTrace} disabled={tracing}>{tracing ? 'Tracing…' : 'Trace why, viewer by viewer →'}</button>}
           </div>
         </Card>
         <Card className="span2" title="Effect on unique reach" sub="Paired difference, variant minus baseline (same seed, same assumptions)">

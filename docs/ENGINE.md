@@ -100,6 +100,16 @@ rebuilt from it. One run takes ~0.02–0.4 s.
 * **Tipping curve**: share of runs reaching 25% of the population as `p` sweeps 0.05–0.95, with
   default assumptions and with assumption uncertainty; marks where the video sits.
 
+## 7b. Beyond the PRD: decision tools (`experiments/`, `diagnostics/counterfactual.py`)
+* **Hook Surgeon**: re-cuts the creator's own shots (payoff first, teaser, cut the drag…), re-rates each with
+  the same prompt and runs a matched experiment per edit.
+* **Is the decision robust? / What decides whether it takes off**: value of information per experiment, plus a
+  64-sample sweep ranking which assumptions drive reach (platform-side vs measurable by the creator).
+* **Robust seeding plan**: who to show it to first, by minimax regret across assumption samples.
+* **Counterfactual Trace**: because both runs share every viewer's dice, the reach difference is traced
+  viewer by viewer — who flipped (same roll, higher threshold), which channel the extra viewers came from,
+  and which signal (stay, watch, like, share) made recommendation grow faster. Every split adds up exactly.
+
 ## 8. Honesty (`ledger/`)
 Every number carries a tag: `COMPUTED`, `MODEL_RATED`, `ASSUMED` (with its range), `SIMULATED`,
 `MEASURED` (only the optional mini backtest, labelled anecdotal with its n). Without a backtest the

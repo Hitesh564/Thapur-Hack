@@ -343,3 +343,39 @@ export interface Drivers {
   n_seeds: number
   note: string
 }
+
+export interface TraceCascade { viewer: number[]; round: number[]; channel: number[]; source: number[]; stay: number[]; share: number[] }
+export interface CounterfactualTrace {
+  variable: string
+  variant_label: string
+  baseline_video_id: string
+  variant_video_id: string | null
+  prior_baseline: number
+  prior_variant: number
+  seed: number
+  seed_scan: { seeds: number[]; delta_reach: number[]; median: number; share_positive: number } | null
+  reach_baseline: number
+  reach_variant: number
+  delta_reach: number
+  milestone_baseline: boolean
+  milestone_variant: boolean
+  stop_baseline: string
+  stop_variant: string
+  rounds_baseline: number
+  rounds_variant: number
+  exposure: { both: number; only_variant: number; only_baseline: number;
+    only_variant_by_channel: Record<string, number>; only_baseline_by_channel: Record<string, number> }
+  decomposition: { seed: number; rec_common_rounds: number; rec_extra_rounds: number; share: number;
+    share_parts: { from_new_sharers: number; lost_from_baseline_only_sharers: number; change_from_sharers_in_both: number }; check: boolean }
+  rec_growth: { log_batch_difference_by_signal: Record<string, number>; log_batch_difference: number; batch_ratio: number;
+    rounds_used: number; capped: boolean; kappa: number; S0: number; top_signal: string | null }
+  flips: Record<string, { gained: number; lost: number }>
+  examples: { viewer: number; community: string; persona: string; role: string; dice: number; p_stay_baseline: number;
+    p_stay_variant: number; stayed_baseline: boolean; stayed_variant: boolean; shared_variant: boolean }[]
+  by_community: Record<string, number>
+  rounds: { round: number; S_baseline?: number; S_variant?: number }[]
+  cascade_baseline: TraceCascade
+  cascade_variant: TraceCascade
+  message: string
+  note: string
+}
