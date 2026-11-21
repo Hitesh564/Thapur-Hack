@@ -49,7 +49,8 @@ def get_client():
             if not key:
                 raise VLMUnavailable("OPENAI_API_KEY not set")
             from openai import OpenAI
-            _client = OpenAI(api_key=key, timeout=float(get_config().get("vlm.timeout_s")))
+            _client = OpenAI(api_key=key, timeout=float(get_config().get("vlm.timeout_s")),
+                             max_retries=int(get_config().get("vlm.client_retries")))
         return _client
 
 

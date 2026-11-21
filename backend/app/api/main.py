@@ -53,7 +53,7 @@ def list_videos() -> list[dict]:
             pre = read_json(d / "preprocess.json") or {}
             frames = pre.get("frame_paths") or []
             bundle = read_json(d / "analysis_bundle.json")
-            out.append({**meta, "analysed": bool(bundle), "thumb": Path(frames[0]).name if frames else None,
+            out.append({**meta, "analysed": bool(bundle), "derived_from": meta.get("derived_from"), "thumb": Path(frames[0]).name if frames else None,
                         "topic": (bundle or {}).get("profile", {}).get("topic", ""),
                         "prior": (bundle or {}).get("prior", {}).get("percentile")})
     return out
@@ -239,6 +239,72 @@ def tipping(req: TippingRequest) -> dict:
         return service.run_tipping(**req.model_dump())
     except service.NotAnalysed as e:
         raise HTTPException(409, str(e)) from e
+
+
+# ---- background jobs: Hook Surgeon, robust seeding plan ---------------------
+@app.post("/videos/{video_id}/surgeon")
+def surgeon_start(video_id: str) -> dict:
+    from app.api import jobs
+    from app.experiments.surgeon import run_surgeon
+    if get_analysis(video_id) is None:
+        raise HTTPException(409, "analyse the video first")
+    return {"job_id": jobs.start("surgeon", run_surgeon, video_id=video_id)}
+
+
+@app.get("/videos/{video_id}/surgeon")
+def surgeon_latest(video_id: str) -> dict:
+    from app.experiments.surgeon import latest_surgeon
+    res = latest_surgeon(video_id)
+    if not res:
+        raise HTTPException(404, "no Hook Surgeon result yet")
+    return res
+
+
+class SeedingPlanRequest(BaseModel):
+    video_id: str
+    n_seeds: Optional[int] = None
+    n_samples: Optional[int] = None
+
+
+@app.post("/seeding-plan")
+def seeding_plan_start(req: SeedingPlanRequest) -> dict:
+    from app.api import jobs
+    if get_analysis(req.video_id) is None:
+        raise HTTPException(409, "analyse the video first")
+    return {"job_id": jobs.start("seeding", service.run_seeding_plan, **req.model_dump())}
+
+
+@app.get("/seeding-plan/{video_id}")
+def seeding_plan_latest(video_id: str) -> dict:
+    res = service.latest_seeding_plan(video_id)
+    if not res:
+        raise HTTPException(404, "no seeding plan yet")
+    return res
+
+
+@app.post("/videos/{video_id}/drivers")
+def drivers_start(video_id: str) -> dict:
+    from app.api import jobs
+    if get_analysis(video_id) is None:
+        raise HTTPException(409, "analyse the video first")
+    return {"job_id": jobs.start("drivers", service.run_drivers, video_id=video_id)}
+
+
+@app.get("/videos/{video_id}/drivers")
+def drivers_latest(video_id: str) -> dict:
+    res = service.latest_drivers(video_id)
+    if not res:
+        raise HTTPException(404, "no driver analysis yet")
+    return res
+
+
+@app.get("/jobs/{job_id}")
+def job_status(job_id: str) -> dict:
+    from app.api import jobs
+    j = jobs.get(job_id)
+    if j is None:
+        raise HTTPException(404, "unknown job (jobs are kept in memory)")
+    return j
 
 
 # ---- ledger -------------------------------------------------------------------

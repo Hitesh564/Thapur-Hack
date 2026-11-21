@@ -82,6 +82,8 @@ export interface VideoMeta {
   analysed?: boolean
   thumb?: string | null
   topic?: string
+  derived_from?: string | null
+  edit_title?: string
   prior?: number | null
 }
 
@@ -224,8 +226,22 @@ export interface ExperimentResult {
   assumption_stability: number
   label: 'Robust' | 'Likely' | 'Inconclusive'
   sensitivity: Record<string, number>
+  milestone_baseline: number | null
+  milestone_variant: number | null
   note: string
   evidence_tag: EvidenceTag
+}
+
+export interface VOI {
+  decision: 'variant' | 'baseline'
+  expected_gain: number
+  evpi: number
+  decision_risk: number
+  per_parameter: { parameter: string; evppi: number; hint: string | null; measurable: boolean }[]
+  recommendation: string
+  unit: string
+  floor: number
+  note: string
 }
 
 export interface ExperimentRecord {
@@ -237,7 +253,38 @@ export interface ExperimentRecord {
   assumption_samples: { sample_id: number; params: Record<string, number>; p_baseline: number; p_variant: number }[]
   baseline_values: number[][]
   variant_values: number[][]
+  baseline_milestone?: number[]
+  variant_milestone?: number[]
+  voi?: VOI
 }
+
+export interface SurgeonEdit {
+  name: string
+  title: string
+  description: string
+  segments: [number, number][]
+  video_id: string
+  duration_s: number
+  prior: number
+  prior_method: string
+  rubric_scores: Record<string, number>
+  experiment_id: string
+  result: ExperimentResult
+  voi_recommendation: string
+}
+export interface Surgeon { video_id: string; edits: SurgeonEdit[]; baseline_milestone: number | null; message: string; note: string }
+
+export interface SeedingOption {
+  key: string; strategy: string; community: number | null; community_name?: string; label: string
+  milestone_rate: number; mean_reach: number; worst_case_milestone_rate: number; max_regret: number
+  mean_regret: number; best_in_samples: number
+}
+export interface SeedingPlan {
+  video_id: string; options: SeedingOption[]; recommended: string; default: string; gain_vs_default: number
+  message: string; n_seeds: number; n_samples: number; method: string; note: string
+}
+
+export interface Job<T> { id: string; kind: string; state: 'running' | 'done' | 'error'; progress: string; result: T | null; error: string | null; elapsed_s: number }
 
 export interface TippingPoint { p: number; milestone_rate: number; mean_reach_pct: number; reach_p10: number; reach_p90: number }
 export interface Tipping {
@@ -284,5 +331,15 @@ export interface Audience {
   communities: { community: number; name: string; viewers: number; hubs: number; bridges: number; archetypes: string[];
     mean_relevance?: number }[]
   archetypes: Archetype[]
+  note: string
+}
+
+export interface Drivers {
+  video_id: string
+  drivers: { parameter: string; rho: number; share: number; hint: string | null; measurable: boolean }[]
+  recommendation: string
+  milestone_rate: number
+  n_samples: number
+  n_seeds: number
   note: string
 }

@@ -15,6 +15,7 @@ import numpy as np
 from scipy.stats import spearmanr
 
 from app.config import Config, Params
+from app.experiments.voi import value_of_information
 from app.engine.simulate import SimInputs, World, draw_uniforms, max_rounds, simulate
 from schemas import ExperimentConfig, ExperimentResult
 
@@ -80,6 +81,8 @@ def run_matched(world: World, cfg: Config, baseline: Arm, variant: Arm, variable
 
     base_vals = np.zeros((n_samples, n_seeds))
     var_vals = np.zeros((n_samples, n_seeds))
+    base_hit = np.zeros((n_samples, n_seeds), bool)
+    var_hit = np.zeros((n_samples, n_seeds), bool)
     p_used = np.zeros((n_samples, 2))
     seeds = [base_seed + s for s in range(n_seeds)]
     for si, seed in enumerate(seeds):
@@ -92,8 +95,9 @@ def run_matched(world: World, cfg: Config, baseline: Arm, variant: Arm, variable
                 inp = SimInputs(world=world, relevance=arm.relevance, prior_p=p, duration_s=arm.duration_s,
                                 params=P, seeding_strategy=arm.seeding_strategy, policy_variant=arm.policy_variant,
                                 video_id=arm.video_id, prior_method=arm.prior_method, assumption_sample_id=a)
-                val = _metric(simulate(inp, seed, U), metric)
-                (base_vals if k == 0 else var_vals)[a, si] = val
+                run = simulate(inp, seed, U)
+                (base_vals if k == 0 else var_vals)[a, si] = _metric(run, metric)
+                (base_hit if k == 0 else var_hit)[a, si] = run.summary.reached_milestone
 
     diff = var_vals - base_vals
     lo_q, hi_q = cfg.get("robustness.interval")
@@ -121,7 +125,10 @@ def run_matched(world: World, cfg: Config, baseline: Arm, variant: Arm, variable
         experiment_id=experiment_id, win_rate=win_rate, effect_median=float(np.median(diff)),
         effect_p10=float(np.quantile(diff, lo_q)), effect_p90=float(np.quantile(diff, hi_q)),
         assumption_stability=stability, label=label, sensitivity=sensitivity,
+        milestone_baseline=float(base_hit.mean()), milestone_variant=float(var_hit.mean()),
     )
+    voi = value_of_information(diff, [s[1] for s in samples], p_used[:, 0], cfg, float(base_vals.mean()),
+                               unit="viewers" if metric == "unique_reach" else metric)
     held = ["population", "graph", "prior_method", "exposure_budget", "random_tensors"]
     held += [h for h in ("seeding", "policy") if h != variable]
     exp_cfg = ExperimentConfig(
@@ -140,5 +147,7 @@ def run_matched(world: World, cfg: Config, baseline: Arm, variant: Arm, variable
         "assumption_samples": [{"sample_id": a, "params": prm, "p_baseline": float(p_used[a, 0]),
                                 "p_variant": float(p_used[a, 1])} for a, prm, _ in samples],
         "baseline_values": base_vals.tolist(), "variant_values": var_vals.tolist(),
+        "baseline_milestone": base_hit.mean(axis=1).tolist(), "variant_milestone": var_hit.mean(axis=1).tolist(),
+        "voi": voi,
     }
     return result, record

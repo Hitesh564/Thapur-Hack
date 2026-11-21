@@ -49,10 +49,12 @@ def base_profile(video_id: str, with_transcript: bool = True) -> VideoProfile:
 
 
 def analyze_video(video_id: str, prior_method: Optional[str] = None, relevance_method: Optional[str] = None,
-                  with_vlm: bool = True) -> dict:
+                  with_vlm: bool = True, with_analysis: bool = True) -> dict:
     """Full preprocessing for one video. The alternate clip goes through this identical path."""
     profile = base_profile(video_id, with_transcript=with_vlm)
-    if with_vlm:
+    if with_vlm and not with_analysis:
+        pr = compute_prior(profile, prior_method)  # rating only (e.g. Hook Surgeon edits)
+    elif with_vlm:
         with ThreadPoolExecutor(max_workers=2) as ex:
             f_an = ex.submit(analyze, profile)
             f_pr = ex.submit(compute_prior, profile, prior_method)

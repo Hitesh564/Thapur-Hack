@@ -229,3 +229,31 @@ def world_layout() -> dict:
             "community_names": pop.community_names,
             "community_centres": [[float(np.cos(2 * np.pi * c / k) * 0.62), float(np.sin(2 * np.pi * c / k) * 0.62)]
                                   for c in range(k)]}
+
+
+def run_seeding_plan(video_id: str, n_seeds: Optional[int] = None, n_samples: Optional[int] = None, progress=None) -> dict:
+    from app.experiments.seeding_plan import robust_seeding_plan
+    profile, pr, rel, _ = _analysis(video_id)
+    out = robust_seeding_plan(get_world(), get_config(), rel, pr.ensemble or [pr.percentile], profile.duration_s,
+                              n_seeds=n_seeds, n_samples=n_samples, progress=progress)
+    out["video_id"] = video_id
+    write_json(cache_root() / "seeding_plans" / f"{video_id}.json", out)
+    return out
+
+
+def latest_seeding_plan(video_id: str) -> Optional[dict]:
+    return read_json(cache_root() / "seeding_plans" / f"{video_id}.json")
+
+
+def run_drivers(video_id: str, progress=None) -> dict:
+    from app.experiments.voi import outcome_driver_sweep
+    profile, pr, rel, _ = _analysis(video_id)
+    out = outcome_driver_sweep(get_world(), get_config(), rel, pr.ensemble or [pr.percentile], profile.duration_s,
+                               progress=progress)
+    out["video_id"] = video_id
+    write_json(cache_root() / "drivers" / f"{video_id}.json", out)
+    return out
+
+
+def latest_drivers(video_id: str) -> Optional[dict]:
+    return read_json(cache_root() / "drivers" / f"{video_id}.json")

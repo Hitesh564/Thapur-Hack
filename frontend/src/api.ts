@@ -1,5 +1,6 @@
 import type {
-  AnalysisBundle, Attention, Audience, Cascade, ExperimentRecord, Ledger, RunPayload, Tipping, VideoMeta, WorldLayout,
+  AnalysisBundle, Attention, Audience, Cascade, Drivers, ExperimentRecord, Job, Ledger, RunPayload, SeedingPlan, Surgeon, Tipping,
+  VideoMeta, WorldLayout,
 } from './types'
 
 const BASE = '/api'
@@ -38,6 +39,13 @@ export const api = {
   layout: () => req<WorldLayout>('/world/layout'),
   experiment: (body: Record<string, unknown>) => post<ExperimentRecord>('/experiments', body),
   tipping: (videoId: string) => post<Tipping>('/tipping', { video_id: videoId }),
+  surgeonStart: (id: string) => post<{ job_id: string }>(`/videos/${id}/surgeon`),
+  surgeonLatest: (id: string) => req<Surgeon>(`/videos/${id}/surgeon`),
+  seedingStart: (id: string) => post<{ job_id: string }>('/seeding-plan', { video_id: id }),
+  seedingLatest: (id: string) => req<SeedingPlan>(`/seeding-plan/${id}`),
+  driversStart: (id: string) => post<{ job_id: string }>(`/videos/${id}/drivers`),
+  driversLatest: (id: string) => req<Drivers>(`/videos/${id}/drivers`),
+  job: <T>(jobId: string) => req<Job<T>>(`/jobs/${jobId}`),
   ledger: (q: { video_id?: string; run_id?: string; experiment_id?: string }) => {
     const qs = new URLSearchParams(Object.entries(q).filter(([, v]) => v) as [string, string][]).toString()
     return req<Ledger>(`/ledger${qs ? `?${qs}` : ''}`)
@@ -47,3 +55,14 @@ export const api = {
 export const frameUrl = (videoId: string, path: string) =>
   `${BASE}/videos/${videoId}/frames/${encodeURIComponent(path.split(/[\\/]/).pop() ?? '')}`
 export const sourceUrl = (videoId: string) => `${BASE}/videos/${videoId}/source`
+
+/** Poll a background job until it finishes; reports progress text. */
+export async function waitForJob<T>(jobId: string, onProgress: (msg: string, elapsed: number) => void): Promise<T> {
+  for (;;) {
+    const j = await api.job<T>(jobId)
+    onProgress(j.progress, j.elapsed_s)
+    if (j.state === 'done') return j.result as T
+    if (j.state === 'error') throw new Error(j.error ?? 'job failed')
+    await new Promise((r) => setTimeout(r, 1500))
+  }
+}

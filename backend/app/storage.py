@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import json
 import os
+import threading
+import time
 from pathlib import Path
 from typing import Any, Optional
 
@@ -23,10 +25,20 @@ def video_dir(video_id: str) -> Path:
 
 
 def write_json(path: Path, obj: Any) -> Path:
+    """Atomic write via a temp file. On Windows another process (a reader, antivirus) can hold the
+    target briefly and make the rename fail, so retry, then fall back to a direct write."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(obj, indent=1, default=str), encoding="utf-8")
-    tmp.replace(path)
+    text = json.dumps(obj, indent=1, default=str)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_text(text, encoding="utf-8")
+    for attempt in range(10):
+        try:
+            tmp.replace(path)
+            return path
+        except PermissionError:
+            time.sleep(0.05 * (attempt + 1))
+    path.write_text(text, encoding="utf-8")
+    tmp.unlink(missing_ok=True)
     return path
 
 

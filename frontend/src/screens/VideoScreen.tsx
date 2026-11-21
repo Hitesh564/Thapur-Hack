@@ -39,7 +39,7 @@ export default function VideoScreen({ videos, videoId, bundle, onSelect, onRefre
             onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           <button className="btn primary" onClick={() => fileRef.current?.click()} disabled={!!busy}>Upload video</button>
           <div className="vidlist" style={{ gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
-            {videos.map((v) => (
+            {videos.filter((v) => !v.derived_from).map((v) => (
               <button key={v.video_id} className={`vidcard${v.video_id === videoId ? ' selected' : ''}`} onClick={() => onSelect(v.video_id)}>
                 {v.thumb ? <img src={frameUrl(v.video_id, v.thumb)} alt="" /> : <div style={{ aspectRatio: '9/12', background: 'var(--surface-2)' }} />}
                 <div className="meta">

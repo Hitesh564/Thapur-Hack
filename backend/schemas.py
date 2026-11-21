@@ -215,6 +215,8 @@ class ExperimentResult(BaseModel):
     assumption_stability: float
     label: Literal["Robust", "Likely", "Inconclusive"]
     sensitivity: dict[str, float] = {}         # parameter -> rank correlation
+    milestone_baseline: Optional[float] = None  # share of runs reaching tipping.milestone_pct
+    milestone_variant: Optional[float] = None
     note: str = "Labels are our own cut-offs, not statistical tests."
     evidence_tag: EvidenceTag = EvidenceTag.SIMULATED
 

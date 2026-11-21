@@ -4,6 +4,7 @@ import { ColumnChart, HBarChart, LineChart } from '../components/charts'
 import { Card, ErrorText, Metric, Spinner, Tag, VerdictLabel } from '../components/ui'
 import { int, nice, num, pct, signed } from '../format'
 import type { AnalysisBundle, ExperimentRecord, Tipping, VideoMeta } from '../types'
+import { DriversCard, SeedingPlanCard, SurgeonCard, VoiPanel } from './LabUsps'
 
 type Variable = 'hook_clip' | 'hypothetical_hook' | 'seeding' | 'policy'
 const STRATS = ['mixed', 'random', 'relevance_biased', 'community_targeted']
@@ -14,7 +15,7 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
   experiment: ExperimentRecord | null; onExperiment: (e: ExperimentRecord) => void
 }) {
   // alternate openings: same-topic versions first, then by prior
-  const others = videos.filter((v) => v.analysed && v.video_id !== videoId).sort((a, b) =>
+  const others = videos.filter((v) => v.analysed && v.video_id !== videoId && (!v.derived_from || v.derived_from === videoId)).sort((a, b) =>
     Number(b.topic === bundle.profile.topic) - Number(a.topic === bundle.profile.topic) || (b.prior ?? 0) - (a.prior ?? 0))
   const [variable, setVariable] = useState<Variable>(others.length ? 'hook_clip' : 'hypothetical_hook')
   const [alt, setAlt] = useState(others[0]?.video_id ?? '')
@@ -51,7 +52,7 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
           {variable === 'hook_clip' && (
             <label className="field">Alternate clip
               <select value={alt} onChange={(e) => setAlt(e.target.value)}>
-                {others.map((v) => <option key={v.video_id} value={v.video_id}>{v.filename}{v.prior != null ? ` (p ${num(v.prior)})` : ''}</option>)}
+                {others.map((v) => <option key={v.video_id} value={v.video_id}>{v.edit_title ? `Edit: ${v.edit_title}` : v.filename}{v.prior != null ? ` (p ${num(v.prior)})` : ''}</option>)}
               </select></label>
           )}
           {variable === 'hypothetical_hook' && (
@@ -81,6 +82,10 @@ export default function LabScreen({ videoId, bundle, videos, experiment, onExper
         <ErrorText error={error} />
       </Card>
       {exp && <Verdict exp={exp} baselinePrior={bundle.prior.percentile} />}
+      {exp?.voi && <VoiPanel voi={exp.voi} />}
+      <SurgeonCard videoId={videoId} onUse={(id) => { setVariable('hook_clip'); setAlt(id); window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
+      <SeedingPlanCard videoId={videoId} />
+      <DriversCard videoId={videoId} />
       <TippingCard videoId={videoId} />
     </div>
   )
@@ -116,6 +121,12 @@ function Verdict({ exp, baselinePrior }: { exp: ExperimentRecord; baselinePrior:
         <Card title="Verdict" sub={`${nice(exp.config.variable)}: ${varLabel} vs baseline`} right={<Tag t="SIMULATED" />}>
           <div className="stack" style={{ gap: 10 }}>
             <VerdictLabel label={r.label} />
+            {r.milestone_baseline != null && r.milestone_variant != null && (
+              <div className="row" style={{ gap: 6, alignItems: 'baseline' }}>
+                <span className="secondary small">Chance of reaching 25% of the audience</span><Tag t="SIMULATED" />
+                <span style={{ fontSize: 22, fontWeight: 600 }}>{pct(r.milestone_baseline)} → {pct(r.milestone_variant)}</span>
+              </div>
+            )}
             <p>In this simulation the variant reaches more unique viewers in <b>{pct(r.win_rate)}</b> of {exp.seeds.length * A} paired
               runs, and its median beats the baseline's in <b>{wins} of {A}</b> assumption settings.</p>
             <p className="note">{r.note} Robust = both rates ≥ 80%; Likely = both ≥ 60%. A simulated scenario, not proof of a causal effect.</p>

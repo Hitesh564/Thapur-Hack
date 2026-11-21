@@ -69,3 +69,13 @@ Format: date — decision — reason.
 - 2026-11-21 — Lab defaults the alternate clip to an analysed video with the same topic (else highest prior). Paired-difference histogram shows exact ties as their own grey bar.
 - 2026-11-21 — Backend additions for the UI: `GET /world/layout` (deterministic community-cluster layout), `GET /simulations/{id}/cascade` (compact per-exposure arrays), thumbnails/topic/prior in `GET /videos`, community names in bottleneck messages.
 - 2026-11-21 — `.claude/launch.json` runs both servers (backend via `python -m uvicorn --app-dir backend`).
+
+## USPs beyond the PRD (user-requested, round 5)
+- 2026-11-21 — Added three features outside the PRD at the user's request: Hook Surgeon, value of information, robust seeding plan. Logged here as deliberate scope extensions.
+- 2026-11-21 — Experiments now record the milestone chance per arm (`milestone_baseline/variant` in ExperimentResult) and the UI leads with it; median reach is a poor headline because outcomes are bimodal.
+- 2026-11-21 — Value of information (EVPI/EVPPI by binning samples per parameter) is attached to every experiment. Finding: for hook decisions it is ~0 because the engine is monotonic in p, so a better-rated opening never loses in any assumption setting; the panel says "the decision is robust" in that case.
+- 2026-11-21 — "What decides whether it takes off": separate sweep (64 assumption samples x 4 seeds, ~5 s) ranking assumptions by share of explained rank variation (Spearman rho^2). Not computed from the 10-sample experiment, which produced spurious correlations (e.g. "more shares hurt").
+- 2026-11-21 — Robust seeding plan: 3 strategies + community-targeted per community, minimax regret on milestone chance across assumption samples, ties broken by mean reach.
+- 2026-11-21 — Hook Surgeon: deterministic edit recipes from detected shots and the cached attention timeline (payoff first, teaser, cut the drag, strongest shot first, trim slow start, swap first two), rendered with ffmpeg, rated with the same rubric prompt (no display-only analysis call), each tested in a matched experiment (15 seeds x 8 samples). Edits are stored as videos with `derived_from` and hidden from the library grid.
+- 2026-11-21 — Long tasks run as in-process background jobs (`/jobs/{id}`) with progress text. OpenAI client timeout 60 s with 1 retry (a hung call previously cost ~3 minutes).
+- 2026-11-21 — `write_json` retries the atomic rename on Windows PermissionError, then writes directly.
